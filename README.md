@@ -52,9 +52,65 @@ Hybrid-BDD-API-Test-Framework
 │   │   │   │   │   │   ├── BaseHelper.java
 │   │   │   │   │   │   ├── UIHelpers.java
 │   │   │   │   │   │   ├── WebDriverHelper.java
-│   │   │   │   │   │   ├── BrowserUtils.java
-│   │   │   │   │   │   ├── FileUtils.java
-│   │   │   │   │   │   └── WaitUtils.java
+│   │   │   │   │   │   ├── BrowserHelper.java
+│   │   │   │   │   │   ├── FileHelper.java
+│   │   │   │   │   │   └── WaitHelper.java
+│   │   │   │   │   ├── utils
+│   │   │   │   │   │   ├── common
+│   │   │   │   │   │   │   ├── StringUtils.java
+│   │   │   │   │   │   │   ├── DateUtils.java
+│   │   │   │   │   │   │   ├── FileUtils.java
+│   │   │   │   │   │   │   ├── JsonUtils.java
+│   │   │   │   │   │   │   ├── XmlUtils.java
+│   │   │   │   │   │   │   ├── ExcelUtils.java
+│   │   │   │   │   │   ├── api
+│   │   │   │   │   │   │   ├── ApiUtils.java
+│   │   │   │   │   │   ├── web
+│   │   │   │   │   │   │   ├── WebDriverUtils.java
+│   │   │   │   │   │   │   ├── WaitUtils.java
+│   │   │   │   │   │   │   ├── BrowserUtils.java
+│   │   │   │   │   │   ├── mobile
+│   │   │   │   │   │   │   ├── MobileUtils.java
+│   │   │   │   │   │   │   ├── AppiumUtils.java
+│   │   │   │   │   │   ├── database
+│   │   │   │   │   │   │   ├── DbUtils.java
+│   │   │   │   │   │   │   ├── SqlQueryBuilder.java
+│   │   │   │   │   │   ├── performance
+│   │   │   │   │   │   │   ├── JMeterUtils.java
+│   │   │   │   │   │   ├── etl
+│   │   │   │   │   │   │   ├── EtlUtils.java
+│   │   │   │   │   │   ├── security
+│   │   │   │   │   │   │   ├── EncryptionUtils.java
+│   │   │   │   │   │   │   ├── HashUtils.java
+│   │   │   │   │   │   ├── ai
+│   │   │   │   │   │   │   ├── MLUtils.java
+│   │   │   │   │   │   │   ├── DataProcessingUtils.java
+│   │   │   │   │   │   │   ├── AIModelUtils.java
+│   │   │   │   │   │   ├── cloud
+│   │   │   │   │   │   │   ├── CloudIntegrationUtils.java
+│   │   │   │   │   │   │   ├── CloudStorageUtils.java
+│   │   │   │   │   │   ├── analytics
+│   │   │   │   │   │   │   ├── LogAnalyticsUtils.java
+│   │   │   │   │   │   │   ├── MetricsUtils.java
+│   │   │   │   │   │   ├── reporting
+│   │   │   │   │   │   │   ├── ReportUtils.java
+│   │   │   │   │   │   │   ├── SummaryUtils.java
+│   │   │   │   │   │   ├── notifications
+│   │   │   │   │   │   │   ├── EmailUtils.java
+│   │   │   │   │   │   │   ├── SlackUtils.java
+│   │   │   │   │   │   │   ├── WebhookUtils.java
+│   │   │   │   │   │   ├── validation
+│   │   │   │   │   │   │   ├── SchemaValidatorUtils.java
+│   │   │   │   │   │   │   ├── DataValidationUtils.java
+│   │   │   │   │   │   │   ├── AssertionUtils.java
+│   │   │   │   │   │   ├── serialization
+│   │   │   │   │   │   │   ├── JsonSerializationUtils.java
+│   │   │   │   │   │   │   ├── XmlSerializationUtils.java
+│   │   │   │   │   │   │   ├── CsvSerializationUtils.java
+│   │   │   │   │   │   ├── utilities
+│   │   │   │   │   │   │   ├── ThreadUtils.java
+│   │   │   │   │   │   │   ├── NetworkUtils.java
+│   │   │   │   │   │   │   ├── MemoryUtils.java
 │   │   │   │   │   ├── mobile
 │   │   │   │   │   │   ├── appium
 │   │   │   │   │   │   │   ├── AppiumDriverFactory.java
