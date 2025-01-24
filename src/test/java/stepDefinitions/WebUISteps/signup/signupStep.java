@@ -1,4 +1,4 @@
 package stepDefinitions.webuiSteps.signup;
 
-public class SignupStep {
+public class SignUpStep {
 }
