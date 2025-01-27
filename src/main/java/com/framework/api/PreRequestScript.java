@@ -1,4 +1,7 @@
 package com.framework.api;
 
-public class PreRequestScript {
+import okhttp3.Request;
+
+public interface PreRequestScript {
+    void execute(Request.Builder requestBuilder);
 }

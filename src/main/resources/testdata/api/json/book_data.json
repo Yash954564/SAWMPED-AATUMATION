@@ -1,0 +1,20 @@
+[
+  {
+    "getallbooks_status_code": "200",
+    "getbookbyisbn_status_code": "200",
+    "addbook_status_code": "201",
+    "getuser_status_code": "200",
+    "deletebook_status_code": "204",
+    "userName":"testuser1",
+    "password":"Password@123"
+  },
+  {
+    "getallbooks_status_code": "200",
+    "getbookbyisbn_status_code": "200",
+    "addbook_status_code": "201",
+    "getuser_status_code": "200",
+    "deletebook_status_code": "204",
+    "userName":"testuser2",
+    "password":"Password@1234"
+  }
+]

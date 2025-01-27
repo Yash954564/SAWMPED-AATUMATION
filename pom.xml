@@ -196,6 +196,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
@@ -215,10 +218,11 @@
                 <version>1.18.20.0</version>
                 <executions>
                     <execution>
+                        <id>delombok</id>
+                        <phase>none</phase>
                         <goals>
                             <goal>delombok</goal>
                         </goals>
-                        <phase>generate-sources</phase>
                     </execution>
                 </executions>
             </plugin>

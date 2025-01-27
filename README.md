@@ -69,6 +69,7 @@ Hybrid-BDD-API-Test-Framework
 │   │   └── java
 │   │       └── com
 │   │           └── framework
+│   │               ├── Main.java
 │   │               ├── ai
 │   │               │   └── generator
 │   │               │       ├── BDDScenarioGenerator.java
@@ -170,7 +171,6 @@ Hybrid-BDD-API-Test-Framework
 │   │               ├── listeners
 │   │               │   ├── AllureListener.java
 │   │               │   └── TestListener.java
-│   │               ├── Main.java
 │   │               ├── manualtestcases
 │   │               │   ├── ManualTestCaseManager.java
 │   │               │   ├── TestCaseData.java
