@@ -1,4 +1,4 @@
-# Hybrid-BDD-API-Test-Framework: Enterprise Edition - Complete Documentation
+# AMPED-Aatumation-Test-Framework: Enterprise Edition - Complete Documentation
 
 ## Introduction
 
