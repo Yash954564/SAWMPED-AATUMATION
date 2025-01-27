@@ -803,7 +803,7 @@ graph LR
 -   **Cloud Platform Libraries:** For integration with cloud services (e.g., Sauce Labs, BrowserStack).
 -   **SonarQube/OWASP ZAP:** For code quality and security scanning.
 -   **AutoIt:** For Windows desktop application testing.
--   **Excel/Google
+-   **Excel/Google:** For Testcases Writing
 
 ## CI/CD Integration
 - **GitLab CI**: GitLab CI configuration file: `.gitlab-ci.yml` to automatically run tests on code push.
