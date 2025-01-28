@@ -65,7 +65,7 @@ This document provides a comprehensive guide to the Hybrid-BDD-API-Test-Framewor
      - Comprehensive actions and capabilities for Windows, Mac, and Linux.
      - Modular design for utilities and page objects.
 
-This README includes:
+## This README includes:
 
 -   **Architectural Overview:** A thorough conceptual explanation of the framework's design principles.
 -   **Visual Aids:**
