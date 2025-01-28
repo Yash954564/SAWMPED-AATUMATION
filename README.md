@@ -1,10 +1,71 @@
-# Hybrid-BDD-API-Test-Framework: Enterprise Edition - Complete Documentation
+# SAWMPED-AATUMATION Test Framework: Enterprise Edition - Complete Documentation
 
 ## Introduction
 
 This document provides a comprehensive guide to the Hybrid-BDD-API-Test-Framework: Enterprise Edition, a sophisticated and scalable test automation solution designed for modern organizations. This framework supports a wide range of testing domains, including Web, API, Mobile, Desktop, Database, Performance, ETL, Security, AI, and Cloud, all while integrating manual test cases. It's engineered to maximize flexibility, maintainability, and actionable insights.
 
-This README includes:
+## Components of SAWMPED-AATUMATION Test Framework:
+
+### 1. **System/Software Testing (S)**
+   - Ensures the functionality, reliability, and quality of entire systems or software applications.
+   - **Key Features:**
+     - End-to-end testing.
+     - Integration with CI/CD pipelines.
+     - Customizable test scenarios for specific system requirements.
+
+### 2. **API Testing (A)**
+   - Validates the functionality, performance, and security of APIs.
+   - **Key Features:**
+     - Support for REST, SOAP, and GraphQL APIs.
+     - Automated generation of test cases.
+     - Response validation and schema checks.
+     - Integration with tools like Postman and Swagger.
+
+### 3. **Web Testing (W)**
+   - Covers testing of web applications to ensure they are functional, responsive, and secure.
+   - **Key Features:**
+     - Cross-browser testing.
+     - Support for Selenium WebDriver.
+     - Visual regression testing.
+     - Accessibility and usability checks.
+
+### 4. **Mobile Testing (M)**
+   - Focuses on testing mobile applications on Android and iOS platforms.
+   - **Key Features:**
+     - Integration with Appium for mobile automation.
+     - Real device and emulator support.
+     - Compatibility and performance testing.
+
+### 5. **Performance Testing (P)**
+   - Evaluates the system's performance under load and stress conditions.
+   - **Key Features:**
+     - Integration with JMeter and Gatling.
+     - Load testing for APIs and web applications.
+     - Detailed performance metrics and reporting.
+
+### 6. **ETL Testing (E)**
+   - Ensures the accuracy and integrity of data during ETL processes.
+   - **Key Features:**
+     - Validation of data transformations and mappings.
+     - Integration with DBUnit for database comparisons.
+     - Automated testing for large datasets.
+
+### 7. **Database Testing (D)**
+   - Focuses on verifying the consistency, integrity, and reliability of database systems.
+   - **Key Features:**
+     - Schema validation.
+     - Data integrity checks.
+     - SQL query optimization and performance testing.
+
+### 8. **Desktop Testing**
+   - Ensures the quality and performance of desktop applications across Windows, Mac, and Linux platforms.
+   - **Key Features:**
+     - Integration with Appium for desktop automation.
+     - Support for AutoIt scripting.
+     - Comprehensive actions and capabilities for Windows, Mac, and Linux.
+     - Modular design for utilities and page objects.
+
+## This README includes:
 
 -   **Architectural Overview:** A thorough conceptual explanation of the framework's design principles.
 -   **Visual Aids:**
