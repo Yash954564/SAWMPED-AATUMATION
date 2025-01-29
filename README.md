@@ -688,9 +688,7 @@ graph LR
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style C fill:#ccf,stroke:#333,stroke-width:2px
      style B fill:#9f9,stroke:#333,stroke-width:2px
-     style Y fill:#fff,stroke:#333,stroke-width:2px
-    style G,H,I,J,K,L,M,N,O,P,Q fill:#eee,stroke:#333,stroke-width:1px
-      style Z,AA,AB fill:#eee,stroke:#333,stroke-width:1px
+     style Y fill:#fff,stroke:#333,stroke-width:
 ```
 
 ### Component Descriptions
@@ -746,8 +744,6 @@ graph LR
     N --> O[End];
      style A fill:#ccf,stroke:#333,stroke-width:2px
        style O fill:#ccf,stroke:#333,stroke-width:2px
-    style C,F,I,L fill:#eee,stroke:#333,stroke-width:1px
-     style B,D,E,G,H,J,K,M,N fill:#eee,stroke:#333,stroke-width:1px
 ```
 
 ### Workflow Explanation
