@@ -1,6 +1,7 @@
 package com.framework.api;
 
 import com.framework.base.LogManager;
+import com.framework.utils.api.ApiUtils;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -17,11 +18,6 @@ public class PatchRequest {
     private String contentType; // Content type of the request body
     private Map<String, String> headers; // Headers for the request
     private final ApiRequestHandler apiRequestHandler; // Instance of ApiRequestHandler
-
-    // Constants for media types
-    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static final MediaType XML = MediaType.parse("application/xml; charset=utf-8");
-    private static final MediaType TEXT = MediaType.parse("text/plain; charset=utf-8");
 
     /**
      * Constructor for creating a PatchRequest with an endpoint, request body and content type.
@@ -70,28 +66,15 @@ public class PatchRequest {
      * Sends the PATCH request.
      *
      * @return The Response object from the API call.
-     * @throws RuntimeException If there is an exception while making the api call
+     * @throws ApiException If there is an exception while making the api call
      */
     public Response send() {
-        String url = ApiConfig.getApiBaseUrl() + endpoint; // Construct the URL
+        String url = ApiConfig.getApiBaseUrl() + (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint) ; // Construct the URL and remove leading slash
         LogManager.info("Sending PATCH request to URL: " + url); // Log the request
-        RequestBody body;
+
 
         // Create the request body
-        switch (contentType.toUpperCase()) {
-            case "JSON":
-                body = RequestBody.create(requestBody, JSON);
-                break;
-            case "XML":
-                body = RequestBody.create(requestBody, XML);
-                break;
-            case "TEXT":
-                body = RequestBody.create(requestBody, TEXT);
-                break;
-            default:
-                body = RequestBody.create(requestBody, MediaType.parse(contentType)); // Default to provided content type
-                break;
-        }
+        RequestBody body= ApiUtils.createRequestBody(requestBody,contentType);
 
         // Build request
         Request.Builder requestBuilder = new Request.Builder()
@@ -111,8 +94,36 @@ public class PatchRequest {
             }
         } catch (IOException e) {
             LogManager.error("Error occurred while sending the PATCH request: " + e.getMessage());
-            throw new RuntimeException("Error occurred while sending the PATCH request: " + e.getMessage(), e);
+            throw new ApiException("Error occurred while sending the PATCH request: " + e.getMessage(), e);
         }
         return response; // Return the response
+    }
+
+    /**
+     * Sends the PATCH request Asynchronously.
+     *
+     * @param callback Callback for handling the response.
+     * @throws ApiException If there is an exception while making the api call
+     */
+    public void sendAsync(Callback callback) {
+        String url = ApiConfig.getApiBaseUrl() + (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint);; // Construct the URL and remove leading slash
+        LogManager.info("Sending PATCH request asynchronously to URL: " + url); // Log the request
+
+
+        // Create the request body
+        RequestBody body= ApiUtils.createRequestBody(requestBody,contentType);
+
+        // Build request
+        Request.Builder requestBuilder = new Request.Builder()
+                .url(url)
+                .patch(body); // Set the method to PATCH
+
+        // Add headers and authentication to request builder
+        HeaderManager.addHeaders(requestBuilder, headers); // Add headers to the request
+        AuthManager.applyAuthentication(requestBuilder, ApiConfig.getApiAuthType(), SessionManager.getSessionValue("token"));
+
+        Request request = requestBuilder.build(); // Build the request
+        Call call = apiRequestHandler.client.newCall(request); // Create a new call object
+        call.enqueue(callback); // Execute the request using OkHttp client asynchronously
     }
 }

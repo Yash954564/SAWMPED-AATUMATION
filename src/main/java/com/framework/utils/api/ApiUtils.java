@@ -3,10 +3,21 @@ package com.framework.utils.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.framework.api.ApiVariableManager;
 import com.framework.base.LogManager;
+import com.framework.utils.validation.AssertionUtils;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -96,6 +107,230 @@ public class ApiUtils {
         String value = getResponseBody(response); // Get response body
         if (value != null) {
             ApiVariableManager.setVariable(key, value); // Set the variable in api variable manager
+        }
+    }
+
+    /**
+     * Validates a JSON response against a schema.
+     * @param response The response object.
+     * @param schemaPath The path to the schema file.
+     * @throws RuntimeException if the schema validation fails.
+     */
+    public static void validateJsonResponseSchema(Response response, String schemaPath) {
+        JsonNode responseNode = getJsonNodeFromResponse(response); // Get json node from the response
+        if (responseNode==null){ // if the node is null, exit from here
+            LogManager.warn("Response is null, so skipping the schema validation");
+            return;
+        }
+        try {
+            JsonSchemaFactory factory = JsonSchemaFactory.byDefault();  // Initialize json schema factory
+            JsonNode schemaNode = JsonLoader.fromPath(schemaPath); // read schema file from the path.
+            JsonSchema schema = factory.getJsonSchema(schemaNode); // get schema object from schema file.
+            com.github.fge.jsonschema.core.report.ProcessingReport report = schema.validate(responseNode); // validate the schema against the response node.
+
+            if (!report.isSuccess()) {
+                LogManager.error("JSON Schema validation failed: " + report); // Log if schema validation fails.
+                throw new RuntimeException("JSON Schema validation failed: " + report);
+            } else {
+                LogManager.info("JSON Schema validation passed");
+            }
+        } catch (IOException | ProcessingException e) {
+            LogManager.error("Exception occurred during schema validation " + e.getMessage());
+            throw new RuntimeException("Exception occurred during schema validation " + e.getMessage(), e);
+        }
+    }
+
+    public static void validateJsonResponseValue(String responseBody, String jsonPath, Object expectedValue) {
+        JsonNode responseNode = getJsonNodeFromString(responseBody);
+        if (responseNode == null) {
+            LogManager.warn("Response body is null, skipping the validation of " + jsonPath);
+            return;
+        }
+        String actualValue = null;
+        try {
+            String[] pathParts = jsonPath.split("\\.");
+            JsonNode currentNode = responseNode;
+            for (String part : pathParts) {
+                if (part.contains("[")){ // checking if the part contains array.
+                    String[] arrayPart = part.split("\\["); // split by "["
+                    String arrayName = arrayPart[0]; // array name before [
+                    if (currentNode instanceof ObjectNode){ // if current node is a JSON object then get the object using array name.
+                        currentNode = currentNode.get(arrayName);
+                    } else {
+                        LogManager.error("Invalid json path " + jsonPath);
+                        throw new RuntimeException("Invalid json path " + jsonPath);
+                    }
+                    int index = Integer.parseInt(arrayPart[1].replaceAll("[^0-9]", ""));// get the index by removing non-numeric characters.
+                    if (currentNode.isArray()) { // if array node read using the index.
+                        currentNode = ((ArrayNode) currentNode).get(index);
+                    } else {
+                        LogManager.error("Invalid json path " + jsonPath);
+                        throw new RuntimeException("Invalid json path " + jsonPath);
+                    }
+
+                } else if (currentNode instanceof ObjectNode) { // if the node is a JSON object then read the value based on the key.
+                    currentNode = currentNode.get(part);
+                } else {
+                    LogManager.error("Invalid json path " + jsonPath);
+                    throw new RuntimeException("Invalid json path " + jsonPath);
+                }
+            }
+            if (currentNode!=null){
+                actualValue = currentNode.asText(); // convert the node value as text.
+            }
+        } catch (Exception e) {
+            LogManager.error("Unable to read the value from the response node " + jsonPath + " " + e.getMessage());
+            throw new RuntimeException("Unable to read the value from the response node " + jsonPath + " " + e.getMessage(), e);
+        }
+
+        AssertionUtils.assertEquals(actualValue, String.valueOf(expectedValue), "Validating JSON value at path: " + jsonPath);
+    }
+
+//    /**
+//     * Validates a specific value in the JSON response.
+//     *
+//     * @param responseBody The response body from an API call.
+//     * @param jsonPath   The JSON path to the value to validate.
+//     * @param expectedValue The expected value.
+//     */
+//    public static void validateJsonResponseValue(String responseBody, String jsonPath, Object expectedValue) {
+//        JsonNode responseNode = getJsonNodeFromString(responseBody); // Get Json node from response.
+//        if (responseNode == null) {
+//            LogManager.warn("Response body is null, skipping the validation of "+jsonPath);
+//            return;
+//        }
+//        String actualValue = null;
+//        try {
+//            String[] pathParts = jsonPath.split("\\."); // split path by . operator
+//            JsonNode currentNode = responseNode;
+//            for(String part : pathParts){
+//                if(currentNode instanceof ObjectNode){
+//                    currentNode = currentNode.get(part);
+//                } else {
+//                    LogManager.error("Invalid json path " + jsonPath);
+//                    throw new RuntimeException("Invalid json path "+jsonPath);
+//                }
+//            }
+//            if (currentNode!=null){
+//                actualValue = currentNode.asText(); // convert the node value as text.
+//            }
+//        } catch (Exception e) {
+//            LogManager.error("Unable to read the value from the response node " + jsonPath + " " + e.getMessage());
+//            throw new RuntimeException("Unable to read the value from the response node " + jsonPath + " " + e.getMessage(), e);
+//        }
+//
+//        AssertionUtils.assertEquals(actualValue, String.valueOf(expectedValue), "Validating JSON value at path: " + jsonPath);
+//    }
+//
+
+    /**
+     * Creates a request body based on content type.
+     *
+     * @param requestBody The request body string
+     * @param contentType The content type (e.g., JSON, XML, TEXT).
+     * @return RequestBody instance.
+     */
+    public static RequestBody createRequestBody(String requestBody, String contentType) {
+        RequestBody body;
+        MediaType mediaType;
+
+        switch (contentType.toUpperCase()) {
+            case "JSON":
+                mediaType = MediaType.parse("application/json; charset=utf-8");
+                break;
+            case "XML":
+                mediaType = MediaType.parse("application/xml; charset=utf-8");
+                break;
+            case "TEXT":
+                mediaType = MediaType.parse("text/plain; charset=utf-8");
+                break;
+            default:
+                mediaType = MediaType.parse(contentType);
+                break;
+        }
+
+        body = RequestBody.create(requestBody, mediaType); // Create request body
+        return body;
+    }
+
+//    /**
+//     * Validates if a JSON response contains a specific key
+//     * @param response The response from API.
+//     * @param jsonPath The path of json node.
+//     * @param message The message for the assertion.
+//     */
+//    public static void validateJsonResponseContains(Response response, String jsonPath, String message) {
+//        JsonNode responseNode = getJsonNodeFromResponse(response);
+//        if (responseNode == null) {
+//            LogManager.warn("Response body is null, skipping the validation of " + jsonPath);
+//            return;
+//        }
+//        try {
+//            String[] pathParts = jsonPath.split("\\.");
+//            JsonNode currentNode = responseNode;
+//            for (String part : pathParts) {
+//                if (currentNode instanceof ObjectNode) {
+//                    currentNode = currentNode.get(part);
+//                } else {
+//                    LogManager.error("Invalid json path " + jsonPath);
+//                    throw new RuntimeException("Invalid json path " + jsonPath);
+//                }
+//            }
+//            AssertionUtils.assertNotNull(currentNode, message); // validates if the response node contains the path.
+//        } catch (Exception e) {
+//            LogManager.error("Unable to read the node from the response node " + jsonPath + " " + e.getMessage());
+//            throw new RuntimeException("Unable to read the node from the response node " + jsonPath + " " + e.getMessage(), e);
+//        }
+//    }
+
+    /**
+     * Validates if a JSON response contains a specific key
+     * @param responseBody The response body from API.
+     * @param jsonPath The path of json node.
+     * @param message The message for the assertion.
+     */
+    public static void validateJsonResponseContains(String responseBody, String jsonPath, String message) {
+        JsonNode responseNode = getJsonNodeFromString(responseBody);
+        if (responseNode == null) {
+            LogManager.warn("Response body is null, skipping the validation of " + jsonPath);
+            return;
+        }
+        try {
+            String[] pathParts = jsonPath.split("\\.");
+            JsonNode currentNode = responseNode;
+            for (String part : pathParts) {
+                if (currentNode instanceof ObjectNode) {
+                    currentNode = currentNode.get(part);
+                } else {
+                    LogManager.error("Invalid json path " + jsonPath);
+                    throw new RuntimeException("Invalid json path " + jsonPath);
+                }
+            }
+            AssertionUtils.assertNotNull(currentNode, message); // validates if the response node contains the path.
+        } catch (Exception e) {
+            LogManager.error("Unable to read the node from the response node " + jsonPath + " " + e.getMessage());
+            throw new RuntimeException("Unable to read the node from the response node " + jsonPath + " " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Converts the JSON string to a JsonNode object.
+     *
+     * @param responseBody The JSON string of the response body
+     * @return The JsonNode representing the JSON string, or null if the response body is empty or null.
+     * @throws RuntimeException If the response is null or there is an error during JSON processing.
+     */
+    public static JsonNode getJsonNodeFromString(String responseBody) {
+        if (responseBody == null || responseBody.isEmpty()) {
+            LogManager.warn("Response body is empty or null"); // Log the warning
+            return null;
+        }
+        ObjectMapper objectMapper = new ObjectMapper(); // Initialize object mapper
+        try {
+            return objectMapper.readTree(responseBody); // Convert the response body to JsonNode
+        } catch (JsonProcessingException e) {
+            LogManager.error("Error while processing the json response " + e.getMessage());
+            throw new RuntimeException("Error while processing the json response " + e.getMessage(), e);
         }
     }
 }

@@ -1,37 +1,18 @@
-Feature: Book Management API
+Feature: Book Management
 
   Scenario: Get all books
-    When the get all books api is called
-    Then the response status code should be "<getallbooks_status_code>"
-    And the response should contain list of books
+    When I send a GET request to "/BookStore/v1/Books"
+    Then The response status code should be 200
+    And set the isbn values from the response body to environment variables
 
-  Scenario: Get a book by isbn
-    Given a book isbn is fetched
-    When the get book by isbn api is called
-    Then the response status code should be "<getbookbyisbn_status_code>"
-    And the response should contain the book with isbn
+  Scenario: Get book by isbn
+    When I send a GET request to "/BookStore/v1/Book" with ISBN
+    Then The response status code should be 200
 
-  Scenario: Add books to user
-    Given a user payload is created with "<userName>" and "<password>"
-    When the user create account api is called
-    And the user login api is called
-    And a book isbn is fetched
-    When the add books to user api is called
-    Then the response status code should be "<addbook_status_code>"
+  Scenario: Add books to user collection
+    When I send a POST request to "/BookStore/v1/Books" with userId and collection of books
+    Then The response status code should be 201
 
   Scenario: Get user details
-    Given a user payload is created with "<userName>" and "<password>"
-    When the user create account api is called
-    And the user login api is called
-    When the get user api is called
-    Then the response status code should be "<getuser_status_code>"
-    And the response should contain user details
-
-  Scenario: Delete all books for a user
-    Given a user payload is created with "<userName>" and "<password>"
-    When the user create account api is called
-    And the user login api is called
-    And a book isbn is fetched
-    And the add books to user api is called
-    When the delete all books for a user api is called
-    Then the response status code should be "<deletebook_status_code>"
+    When I send a GET request to "/Account/v1/User/" with userId
+    Then The response status code should be 200

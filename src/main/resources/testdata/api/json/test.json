@@ -1,0 +1,19 @@
+{
+  "users": {
+    "createUser": {
+      "userName": null,
+      "password": "Jaggu@1234"
+    },
+    "existingUser": {
+      "userName": null,
+      "password": "Jaggu@1234"
+    }
+  },
+  "books": {
+    "isbn": null,
+    "isbn1": null,
+    "isbn2": null,
+    "isbn3": null,
+    "isbn4": null
+  }
+}

@@ -32,14 +32,14 @@ public class ApiRequestHandler {
      * @param endpoint The API endpoint.
      * @param headers  Optional headers to include in the request.
      * @return The Response object from the API call.
-     * @throws RuntimeException If there is an exception while making the api call
+     * @throws ApiException If there is an exception while making the api call
      */
     public Response get(String endpoint, Map<String, String> headers) {
         try {
             return new GetRequest(endpoint, headers).send(); // Send request through GetRequest
         } catch (Exception e) {
             LogManager.error("Error while sending Get request " + e.getMessage());
-            throw new RuntimeException("Error while sending Get request " + e.getMessage(), e);
+            throw new ApiException("Error while sending Get request " + e.getMessage(), e);
         }
     }
 
@@ -51,14 +51,14 @@ public class ApiRequestHandler {
      * @param contentType The content type of the body.
      * @param headers     Optional headers to include in the request.
      * @return The Response object from the API call.
-     * @throws RuntimeException If there is an exception while making the api call
+     * @throws ApiException If there is an exception while making the api call
      */
     public Response post(String endpoint, String requestBody, String contentType, Map<String, String> headers) {
         try {
             return new PostRequest(endpoint, requestBody, contentType, headers).send(); // Send request through PostRequest
         } catch (Exception e) {
             LogManager.error("Error while sending Post request " + e.getMessage());
-            throw new RuntimeException("Error while sending Post request " + e.getMessage(), e);
+            throw new ApiException("Error while sending Post request " + e.getMessage(), e);
         }
     }
 
@@ -70,14 +70,14 @@ public class ApiRequestHandler {
      * @param contentType The content type of the body.
      * @param headers     Optional headers to include in the request.
      * @return The Response object from the API call.
-     * @throws RuntimeException If there is an exception while making the api call
+     * @throws ApiException If there is an exception while making the api call
      */
     public Response put(String endpoint, String requestBody, String contentType, Map<String, String> headers) {
         try {
             return new PutRequest(endpoint, requestBody, contentType, headers).send(); // Send request through PutRequest
         } catch (Exception e) {
             LogManager.error("Error while sending Put request " + e.getMessage());
-            throw new RuntimeException("Error while sending Put request " + e.getMessage(), e);
+            throw new ApiException("Error while sending Put request " + e.getMessage(), e);
         }
     }
 
@@ -87,14 +87,14 @@ public class ApiRequestHandler {
      * @param endpoint The API endpoint.
      * @param headers  Optional headers to include in the request.
      * @return The Response object from the API call.
-     * @throws RuntimeException If there is an exception while making the api call
+     * @throws ApiException If there is an exception while making the api call
      */
     public Response delete(String endpoint, Map<String, String> headers) {
         try {
             return new DeleteRequest(endpoint, headers).send(); // Send request through DeleteRequest
         } catch (Exception e) {
             LogManager.error("Error while sending Delete request " + e.getMessage());
-            throw new RuntimeException("Error while sending Delete request " + e.getMessage(), e);
+            throw new ApiException("Error while sending Delete request " + e.getMessage(), e);
         }
     }
 
@@ -106,14 +106,105 @@ public class ApiRequestHandler {
      * @param contentType The content type of the body.
      * @param headers     Optional headers to include in the request.
      * @return The Response object from the API call.
-     * @throws RuntimeException If there is an exception while making the api call
+     * @throws ApiException If there is an exception while making the api call
      */
     public Response patch(String endpoint, String requestBody, String contentType, Map<String, String> headers) {
         try {
             return new PatchRequest(endpoint, requestBody, contentType, headers).send(); // Send request through PatchRequest
         } catch (Exception e) {
             LogManager.error("Error while sending Patch request " + e.getMessage());
-            throw new RuntimeException("Error while sending Patch request " + e.getMessage(), e);
+            throw new ApiException("Error while sending Patch request " + e.getMessage(), e);
+        }
+    }
+    /**
+     * Sends a GET request asynchronously to the specified endpoint.
+     *
+     * @param endpoint The API endpoint.
+     * @param headers  Optional headers to include in the request.
+     * @param callback Callback for handling the response.
+     * @throws ApiException If there is an exception while making the api call
+     */
+    public void getAsync(String endpoint, Map<String, String> headers, Callback callback) {
+        try {
+            new GetRequest(endpoint, headers).sendAsync(callback);
+        } catch (Exception e) {
+            LogManager.error("Error while sending async Get request " + e.getMessage());
+            throw new ApiException("Error while sending async Get request " + e.getMessage(), e);
+        }
+    }
+
+
+    /**
+     * Sends a POST request asynchronously to the specified endpoint.
+     *
+     * @param endpoint    The API endpoint.
+     * @param requestBody The body of the POST request.
+     * @param contentType The content type of the body.
+     * @param headers     Optional headers to include in the request.
+     * @param callback    Callback for handling the response.
+     * @throws ApiException If there is an exception while making the api call
+     */
+    public void postAsync(String endpoint, String requestBody, String contentType, Map<String, String> headers, Callback callback) {
+        try {
+            new PostRequest(endpoint, requestBody, contentType, headers).sendAsync(callback);
+        }catch (Exception e){
+            LogManager.error("Error while sending async Post request " + e.getMessage());
+            throw new ApiException("Error while sending async Post request " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Sends a PUT request asynchronously to the specified endpoint.
+     *
+     * @param endpoint    The API endpoint.
+     * @param requestBody The body of the PUT request.
+     * @param contentType The content type of the body.
+     * @param headers     Optional headers to include in the request.
+     * @param callback    Callback for handling the response.
+     * @throws ApiException If there is an exception while making the api call
+     */
+    public void putAsync(String endpoint, String requestBody, String contentType, Map<String, String> headers, Callback callback) {
+        try{
+            new PutRequest(endpoint, requestBody, contentType, headers).sendAsync(callback);
+        }catch (Exception e){
+            LogManager.error("Error while sending async Put request " + e.getMessage());
+            throw new ApiException("Error while sending async Put request " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Sends a DELETE request asynchronously to the specified endpoint.
+     *
+     * @param endpoint The API endpoint.
+     * @param headers  Optional headers to include in the request.
+     * @param callback Callback for handling the response.
+     *  @throws ApiException If there is an exception while making the api call
+     */
+    public void deleteAsync(String endpoint, Map<String, String> headers, Callback callback) {
+        try{
+            new DeleteRequest(endpoint, headers).sendAsync(callback);
+        } catch (Exception e){
+            LogManager.error("Error while sending async Delete request " + e.getMessage());
+            throw new ApiException("Error while sending async Delete request " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Sends a PATCH request asynchronously to the specified endpoint.
+     *
+     * @param endpoint    The API endpoint.
+     * @param requestBody The body of the PATCH request.
+     * @param contentType The content type of the body.
+     * @param headers     Optional headers to include in the request.
+     * @param callback    Callback for handling the response.
+     * @throws ApiException If there is an exception while making the api call
+     */
+    public void patchAsync(String endpoint, String requestBody, String contentType, Map<String, String> headers, Callback callback) {
+        try{
+            new PatchRequest(endpoint, requestBody, contentType, headers).sendAsync(callback);
+        } catch (Exception e){
+            LogManager.error("Error while sending async Patch request " + e.getMessage());
+            throw new ApiException("Error while sending async Patch request " + e.getMessage(), e);
         }
     }
 }

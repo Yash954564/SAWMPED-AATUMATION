@@ -1,20 +1,6 @@
 [
   {
-    "userName": "testuser1",
-    "password": "Password@123",
-    "create_status_code": "201",
-    "create_key": "userID",
-    "login_key": "token",
-    "auth_status_code": "200",
-    "delete_status_code": "204"
-  },
-  {
-    "userName": "testuser2",
-    "password": "Password@1234",
-    "create_status_code": "201",
-    "create_key": "userID",
-    "login_key": "token",
-    "auth_status_code": "200",
-    "delete_status_code": "204"
+    "userName": "TestUser12@6969",
+    "password": "Password@123"
   }
 ]

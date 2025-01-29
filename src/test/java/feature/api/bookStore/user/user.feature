@@ -1,24 +1,18 @@
-Feature: User Management API
+Feature: User Management
 
   Scenario: Create a new user
-    Given a user payload is created with "<userName>" and "<password>"
-    When the user create account api is called
-    Then the response status code should be "<create_status_code>"
-    And the response should contain the key "<create_key>"
+    Given User object is prepared with random username and password
+    When I send a POST request to "/Account/v1/User"
+    Then The response status code should be 200
+    And The response body should contain key "userID"
+    And set the response "userID" as an environment variable "id"
 
-  Scenario: Login with existing user
-    Given a user payload is created with "<userName>" and "<password>"
-    When the user login api is called
-    Then the response should contain the key "<login_key>"
+  Scenario: User Login
+    Given User object is prepared with already created username and password
+    When I send a POST request to "/Account/v1/GenerateToken"
+    Then set the response "token" as an environment variable "Genratedtoken"
 
-  Scenario: Authenticate user
-    Given a user payload is created with "<userName>" and "<password>"
-    When the user auth api is called
-    Then the response status code should be "<auth_status_code>"
-
-  Scenario: Delete existing user
-    Given a user payload is created with "<userName>" and "<password>"
-    When the user create account api is called
-    And the user login api is called
-    When the user delete account api is called
-    Then the response status code should be "<delete_status_code>"
+  Scenario: User Authorization
+    Given User object is prepared with already created username and password
+    When I send a POST request to "/Account/v1/Authorized"
+    Then The response status code should be 200

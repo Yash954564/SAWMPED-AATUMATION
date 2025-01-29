@@ -1,6 +1,8 @@
 package com.framework.api;
 
 import com.framework.base.LogManager;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -44,10 +46,10 @@ public class GetRequest {
      * Sends the GET request.
      *
      * @return The Response object from the API call.
-     * @throws RuntimeException If there is an exception while making the api call
+     * @throws ApiException If there is an exception while making the api call
      */
     public Response send() {
-        String url = ApiConfig.getApiBaseUrl() + endpoint; // Construct the URL
+        String url = ApiConfig.getApiBaseUrl() + (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint); // Construct the URL and remove leading slash
         LogManager.info("Sending GET request to URL: " + url); // Log the request
 
         // Build request
@@ -69,8 +71,35 @@ public class GetRequest {
             }
         } catch (IOException e) {
             LogManager.error("Error occurred while sending the GET request: " + e.getMessage());
-            throw new RuntimeException("Error occurred while sending the GET request: " + e.getMessage(), e);
+            throw new ApiException("Error occurred while sending the GET request: " + e.getMessage(), e);
         }
         return response; // Return the response
+    }
+
+
+    /**
+     * Sends the GET request Asynchronously.
+     *
+     * @param callback Callback for handling the response.
+     * @throws ApiException If there is an exception while making the api call
+     */
+    public void sendAsync(Callback callback) {
+        String url = ApiConfig.getApiBaseUrl() + (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint);; // Construct the URL and remove leading slash
+        LogManager.info("Sending GET request asynchronously to URL: " + url); // Log the request
+
+        // Build request
+        Request.Builder requestBuilder = new Request.Builder()
+                .url(url)
+                .get(); // Set the method to GET
+
+        // Add headers and authentication to request builder
+        HeaderManager.addHeaders(requestBuilder, headers); // Add headers to the request
+        AuthManager.applyAuthentication(requestBuilder, ApiConfig.getApiAuthType(), SessionManager.getSessionValue("token"));
+
+        Request request = requestBuilder.build(); // Build the request
+
+        Call call = apiRequestHandler.client.newCall(request); // Create a new call object
+        call.enqueue(callback); // Execute the request using OkHttp client asynchronously
+
     }
 }

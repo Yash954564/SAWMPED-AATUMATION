@@ -17,9 +17,14 @@ public class BaseTest {
         String filePath = "src/main/resources/configuration/environments/" + environment + "/" + environment + ".properties";
         // Load properties from the file
         properties = propertiesFileReader.loadProperties(filePath);
+        // Construct file path to load test data configurations
+        String testDataConfigPath = "src/main/resources/configuration/config.properties";
+        properties.putAll(propertiesFileReader.loadProperties(testDataConfigPath));
         // Log that properties are loaded from this file
         LogManager.info("Properties loaded from: " + filePath);
         // Log all the loaded properties
+        properties.forEach((key, value) -> LogManager.info(key + ":" + value));
+        LogManager.info("Test data properties loaded from: " + testDataConfigPath);
         properties.forEach((key, value) -> LogManager.info(key + ":" + value));
     }
 
