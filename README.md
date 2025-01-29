@@ -124,7 +124,7 @@ The framework is built upon the following core design principles:
 ## Project Structure Tree Diagram
 
 ```
-Hybrid-BDD-API-Test-Framework
+SAWMPED-AATUMATION
 ├── src
 │   ├── main
 │   │   └── java
@@ -151,11 +151,14 @@ Hybrid-BDD-API-Test-Framework
 │   │               │       ├── MetricCollector.java
 │   │               │       └── TrendAnalyzer.java
 │   │               ├── api
+│   │               │   ├── ApiConfig.java
 │   │               │   ├── ApiRequestHandler.java
 │   │               │   ├── ApiVariableManager.java
 │   │               │   ├── AuthManager.java
+│   │               │   ├── DeleteRequest.java
 │   │               │   ├── GetRequest.java
 │   │               │   ├── HeaderManager.java
+│   │               │   ├── PatchRequest.java
 │   │               │   ├── PostRequest.java
 │   │               │   ├── PostRequestScript.java
 │   │               │   ├── PreRequestScript.java
@@ -348,7 +351,6 @@ Hybrid-BDD-API-Test-Framework
 │   │                       ├── BrowserUtils.java
 │   │                       ├── WaitUtils.java
 │   │                       └── WebDriverUtils.java
-│   │
 │   └── resources
 │       ├── configuration
 │       │   ├── ai
@@ -413,7 +415,9 @@ Hybrid-BDD-API-Test-Framework
 │       └── testdata
 │           ├── api
 │           │   ├── json
-│           │   │   └── test.json
+│           │   │   ├── book_data.json
+│           │   │   ├── test.json
+│           │   │   └── user_data.json
 │           │   ├── other
 │           │   │   └── test.txt
 │           │   └── xlsx
@@ -479,6 +483,13 @@ Hybrid-BDD-API-Test-Framework
 │       └── java
 │           ├── feature
 │           │   ├── api
+│           │   │   ├── bookStore
+│           │   │   │   ├── book
+│           │   │   │   │   └── book.feature
+│           │   │   │   └── delete
+│           │   │   │       └── delete.feature
+│           │   │   │   └── user
+│           │   │   │       └── user.feature
 │           │   │   ├── login
 │           │   │   │   └── login.feature
 │           │   │   └── signup
@@ -516,6 +527,13 @@ Hybrid-BDD-API-Test-Framework
 │           │           └── signup.feature
 │           ├── stepDefinitions
 │           │   ├── apiSteps
+│           │   │   ├── bookStore
+│           │   │   │   ├── book
+│           │   │   │   │   └── BookSteps.java
+│           │   │   │   └── delete
+│           │   │   │       └── DeleteSteps.java
+│           │   │   │   └── user
+│           │   │   │       └── UserSteps.java
 │           │   │   ├── login
 │           │   │   │   └── LoginStep.java
 │           │   │   └── signup
@@ -553,6 +571,13 @@ Hybrid-BDD-API-Test-Framework
 │           │           └── SignUpStep.java
 │           └── testcases
 │               ├── apiTest
+│               │   ├── bookStore
+│               │   │   ├── book
+│               │   │   │   └── BookTest.java
+│               │   │   └── delete
+│               │   │       └── DeleteTest.java
+│               │   │   └── user
+│               │   │       └── UserTest.java
 │               │   ├── login
 │               │   │   └── LoginTest.java
 │               │   └── signup
