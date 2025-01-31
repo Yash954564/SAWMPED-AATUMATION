@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This document provides a comprehensive guide to the Hybrid-BDD-API-Test-Framework: Enterprise Edition, a sophisticated and scalable test automation solution designed for modern organizations. This framework supports a wide range of testing domains, including Web, API, Mobile, Desktop, Database, Performance, ETL, Security, AI, and Cloud, all while integrating manual test cases. It's engineered to maximize flexibility, maintainability, and actionable insights.
+This document provides a comprehensive guide to the SAWMPED-AATUMATION Test Framework: Enterprise Edition, a sophisticated and scalable test automation solution designed for modern organizations. This framework supports a wide range of testing domains, including Web, API, Mobile, Desktop, Database, Performance, ETL, Security, AI, and Cloud, all while integrating manual test cases. It's engineered to maximize flexibility, maintainability, and actionable insights.
 
 ## Components of SAWMPED-AATUMATION Test Framework:
 
@@ -784,7 +784,7 @@ graph LR
 
     ```bash
     git clone [repository-url]
-    cd Hybrid-BDD-API-Test-Framework
+    cd SAWMPED-AATUMATION
     ```
 2.  **Install Dependencies:** Ensure all the prerequisite tools and software are installed on your system.
 
@@ -894,7 +894,7 @@ graph LR
 
 ## Enhancements
 
-To enhance your Hybrid-BDD-API-Test-Framework and make it future-proof, particularly with the integration of AI and third-party tools, here are several recommendations:
+To enhance your SAWMPED-AATUMATION Test Framework and make it future-proof, particularly with the integration of AI and third-party tools, here are several recommendations:
 
 1. **AI Integration for Test Optimization**
     - **AI-driven Test Generation**: Incorporate AI models (such as GPT-based or machine learning models) to generate test cases and BDD scenarios from natural language descriptions. This can simplify the test creation process and ensure coverage for various use cases.
