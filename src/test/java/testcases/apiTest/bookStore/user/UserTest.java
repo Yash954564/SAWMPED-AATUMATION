@@ -12,10 +12,12 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import io.qameta.allure.Description;
 
 public class UserTest extends BaseTest {
 
     @Test(description = "Test to create a new user")
+    @Description("Test to create a new user")
     public void createUserTest() {
         ApiRequestHandler api = new ApiRequestHandler();
         // set the header values for the api call.
@@ -23,7 +25,7 @@ public class UserTest extends BaseTest {
         headers.put("accept", "application/json");
         headers.put("Content-Type", "application/json");
         // get data from json file
-        List<Map<String, String>> testData = DataProvider.getData("src/main/resources/testdata/api/json/user_data.json", "JSON");
+        List<Map<String, String>> testData = DataProvider.getData("src/test/resources/testdata/api/json/user_data.json", "JSON");
         for (Map<String, String> data : testData) {
             String userName = data.get("userName"); // Get the user name
             String password = data.get("password");  // Get the user password.
@@ -47,6 +49,7 @@ public class UserTest extends BaseTest {
     }
 
     @Test(description = "Test user login", dependsOnMethods = "createUserTest")
+    @Description("Test user login")
     public void userLoginTest() {
         ApiRequestHandler api = new ApiRequestHandler();
         String requestBody = ApiVariableManager.getVariable("USER"); // Get the user object.
@@ -69,6 +72,7 @@ public class UserTest extends BaseTest {
     }
 
     @Test(description = "Test user authorization", dependsOnMethods = "userLoginTest")
+    @Description("Test user authorization")
     public void userAuthorizationTest() {
         ApiRequestHandler api = new ApiRequestHandler();
         String requestBody = ApiVariableManager.getVariable("USER"); // Get the user object.

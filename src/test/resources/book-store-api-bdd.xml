@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="API Test Suite" parallel="tests" thread-count="5">
+    <test name="Book API BDD Tests">
+        <packages>
+            <package name="feature.api.bookStore.f1_user"/>
+            <package name="feature.api.bookStore.f2_book"/>
+            <package name="feature.api.bookStore.f3_delete"/>
+        </packages>
+    </test>
+</suite>

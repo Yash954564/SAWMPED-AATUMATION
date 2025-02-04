@@ -2,6 +2,7 @@ package com.framework.api;
 
 import com.framework.base.LogManager;
 import com.framework.utils.api.ApiUtils;
+import io.qameta.allure.Step;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -68,6 +69,7 @@ public class PatchRequest {
      * @return The Response object from the API call.
      * @throws ApiException If there is an exception while making the api call
      */
+    @Step("Send PATCH Request")
     public Response send() {
         String url = ApiConfig.getApiBaseUrl() + (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint) ; // Construct the URL and remove leading slash
         LogManager.info("Sending PATCH request to URL: " + url); // Log the request
@@ -105,6 +107,7 @@ public class PatchRequest {
      * @param callback Callback for handling the response.
      * @throws ApiException If there is an exception while making the api call
      */
+    @Step("Send Asynchronous PATCH Request")
     public void sendAsync(Callback callback) {
         String url = ApiConfig.getApiBaseUrl() + (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint);; // Construct the URL and remove leading slash
         LogManager.info("Sending PATCH request asynchronously to URL: " + url); // Log the request

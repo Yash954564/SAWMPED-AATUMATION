@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="API Test Suite" parallel="tests" thread-count="5">
+        <test name="Book API Tests">
+            <classes>
+                <class name="testcases.apiTest.bookStore.user.UserTest"/>
+                <class name="testcases.apiTest.bookStore.book.BookTest"/>
+                <class name="testcases.apiTest.bookStore.delete.DeleteTest"/>
+            </classes>
+        </test>
+
+
+</suite>

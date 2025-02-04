@@ -1,5 +1,6 @@
 package com.framework.base;
 
+import io.qameta.allure.Step;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +26,7 @@ public class PropertiesFileReader {
      * @return The properties object containing the loaded data.
      * @throws RuntimeException If there is an error while loading the properties file.
      */
+    @Step("Load properties from file: {0}")
     public Properties loadProperties(String filePath) {
         InputStream input = null; // Input stream for the file
         try {
@@ -61,6 +63,7 @@ public class PropertiesFileReader {
      * @return The value of the property if the key is valid
      * @throws RuntimeException If the key is not found in the file.
      */
+    @Step("Get property from the file for key: {0}")
     public String getProperty(String key) {
         String value = properties.getProperty(key); // get the property by key from properties object
         if (value == null) {

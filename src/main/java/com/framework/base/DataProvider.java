@@ -4,6 +4,7 @@ package com.framework.base;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.qameta.allure.Step;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 public class DataProvider {
 
+    @Step("Read data from file: {0}, of type {1}")
     public static  List<Map<String, String>> getData(String filePath, String fileType){
         List<Map<String, String>> data = null;
         try {

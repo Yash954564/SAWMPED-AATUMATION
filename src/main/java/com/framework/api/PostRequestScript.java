@@ -1,6 +1,7 @@
 package com.framework.api;
 
 import com.framework.base.LogManager;
+import io.qameta.allure.Step;
 import okhttp3.Response;
 import java.io.IOException;
 import java.util.Objects;
@@ -23,6 +24,7 @@ public interface PostRequestScript {
      *
      * @param response The API response.
      */
+    @Step("Set Response variables")
     default void setVariables(Response response) {
         if (Objects.nonNull(response)) {
             try {
@@ -44,6 +46,7 @@ public interface PostRequestScript {
      * @return The response body as a string.
      * @throws RuntimeException If there's an error reading the response body.
      */
+    @Step("Get Response")
     default String getResponse(Response response) {
         try {
             return Objects.requireNonNull(response.body()).string(); // Get the response body as string

@@ -1,5 +1,6 @@
 package com.framework.base;
 
+import io.qameta.allure.Step;
 import net.datafaker.Faker;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,6 +19,7 @@ public class Operations {
      *
      * @return A random UUID string.
      */
+    @Step("Generate Random String")
     public static String generateRandomString() {
         return UUID.randomUUID().toString(); // Generates and returns random string
     }
@@ -27,6 +29,7 @@ public class Operations {
      *
      * @return A random string in the format "User123@".
      */
+    @Step("Generate Random User String")
     public static String generateRandomUserString() {
         String prefix = "User";
         Random random = new Random();
@@ -41,6 +44,7 @@ public class Operations {
      *
      * @return A random integer value.
      */
+    @Step("Generate Random Number")
     public static int generateRandomNumber() {
         Random random = new Random(); // Instance of random class
         return random.nextInt(Integer.MAX_VALUE); // Generates and returns a random integer
@@ -51,6 +55,7 @@ public class Operations {
      *
      * @return current date and time string.
      */
+    @Step("Get Current Date and Time")
     public static String getDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(BaseTest.getProperty("date.time.format")); // Get the date time pattern
         return LocalDateTime.now().format(formatter); // Gets the current date time in specified format
@@ -61,6 +66,7 @@ public class Operations {
      *
      * @return A random first name.
      */
+    @Step("Get Random First Name")
     public static String getFirstName() {
         return faker.name().firstName(); // generate random first name
     }
@@ -70,6 +76,7 @@ public class Operations {
      *
      * @return A random last name.
      */
+    @Step("Get Random Last Name")
     public static String getLastName() {
         return faker.name().lastName(); // generate random last name
     }
@@ -79,6 +86,7 @@ public class Operations {
      *
      * @return A random email address.
      */
+    @Step("Get Random Email")
     public static String getEmail() {
         return faker.internet().emailAddress(); // generate random email
     }
@@ -88,6 +96,7 @@ public class Operations {
      *
      * @return A random phone number.
      */
+    @Step("Get Random Phone Number")
     public static String getPhoneNumber() {
         return faker.phoneNumber().phoneNumber(); // generate random phone number
     }
@@ -98,6 +107,7 @@ public class Operations {
      * @param key   The key of the property to set.
      * @param value The value of the property to set.
      */
+    @Step("Set System property: {0}, Value: {1}")
     public static void setSystemProperty(String key, String value) {
         LogManager.info("Setting system property " + key + " value " + value); // Log that system property is setting
         System.setProperty(key, value); // Set system property
@@ -109,6 +119,7 @@ public class Operations {
      * @param key The key of the property to get.
      * @return The value of the system property.
      */
+    @Step("Get System property: {0}")
     public static String getSystemProperty(String key) {
         LogManager.info("Getting system property " + key); // Log that system property is getting
         return System.getProperty(key); // Get and return system property

@@ -113,6 +113,24 @@
             <version>${jmeter.version}</version>
         </dependency>
 
+        <!-- Cucumber dependencies -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>7.15.0</version> <!-- Use the latest version -->
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>7.15.0</version> <!-- Use the latest version -->
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-picocontainer</artifactId>
+            <version>7.15.0</version> <!-- Use the latest version -->
+            <scope>test</scope>
+        </dependency>
+
 
         <!-- Allure -->
         <dependency>

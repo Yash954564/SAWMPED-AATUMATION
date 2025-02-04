@@ -1,5 +1,6 @@
 package com.framework.api;
 
+import io.qameta.allure.Step;
 import okhttp3.Request;
 
 /**
@@ -12,5 +13,6 @@ public interface PreRequestScript {
      *
      * @param requestBuilder The OkHttp request builder.
      */
+    @Step("Execute pre request script")
     void execute(Request.Builder requestBuilder);
 }

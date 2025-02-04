@@ -1,6 +1,7 @@
 package com.framework.api;
 
 import com.framework.base.LogManager;
+import io.qameta.allure.Step;
 import okhttp3.*;
 
 import java.util.Map;
@@ -34,6 +35,7 @@ public class ApiRequestHandler {
      * @return The Response object from the API call.
      * @throws ApiException If there is an exception while making the api call
      */
+    @Step("Send GET Request to {0}")
     public Response get(String endpoint, Map<String, String> headers) {
         try {
             return new GetRequest(endpoint, headers).send(); // Send request through GetRequest
@@ -53,6 +55,7 @@ public class ApiRequestHandler {
      * @return The Response object from the API call.
      * @throws ApiException If there is an exception while making the api call
      */
+    @Step("Send POST Request to {0}")
     public Response post(String endpoint, String requestBody, String contentType, Map<String, String> headers) {
         try {
             return new PostRequest(endpoint, requestBody, contentType, headers).send(); // Send request through PostRequest
@@ -72,6 +75,7 @@ public class ApiRequestHandler {
      * @return The Response object from the API call.
      * @throws ApiException If there is an exception while making the api call
      */
+    @Step("Send PUT Request to {0}")
     public Response put(String endpoint, String requestBody, String contentType, Map<String, String> headers) {
         try {
             return new PutRequest(endpoint, requestBody, contentType, headers).send(); // Send request through PutRequest
@@ -89,6 +93,7 @@ public class ApiRequestHandler {
      * @return The Response object from the API call.
      * @throws ApiException If there is an exception while making the api call
      */
+    @Step("Send DELETE Request to {0}")
     public Response delete(String endpoint, Map<String, String> headers) {
         try {
             return new DeleteRequest(endpoint, headers).send(); // Send request through DeleteRequest
@@ -108,6 +113,7 @@ public class ApiRequestHandler {
      * @return The Response object from the API call.
      * @throws ApiException If there is an exception while making the api call
      */
+    @Step("Send PATCH Request to {0}")
     public Response patch(String endpoint, String requestBody, String contentType, Map<String, String> headers) {
         try {
             return new PatchRequest(endpoint, requestBody, contentType, headers).send(); // Send request through PatchRequest
@@ -124,6 +130,7 @@ public class ApiRequestHandler {
      * @param callback Callback for handling the response.
      * @throws ApiException If there is an exception while making the api call
      */
+    @Step("Send Asynchronous GET Request to {0}")
     public void getAsync(String endpoint, Map<String, String> headers, Callback callback) {
         try {
             new GetRequest(endpoint, headers).sendAsync(callback);
@@ -144,6 +151,7 @@ public class ApiRequestHandler {
      * @param callback    Callback for handling the response.
      * @throws ApiException If there is an exception while making the api call
      */
+    @Step("Send Asynchronous POST Request to {0}")
     public void postAsync(String endpoint, String requestBody, String contentType, Map<String, String> headers, Callback callback) {
         try {
             new PostRequest(endpoint, requestBody, contentType, headers).sendAsync(callback);
@@ -163,6 +171,7 @@ public class ApiRequestHandler {
      * @param callback    Callback for handling the response.
      * @throws ApiException If there is an exception while making the api call
      */
+    @Step("Send Asynchronous PUT Request to {0}")
     public void putAsync(String endpoint, String requestBody, String contentType, Map<String, String> headers, Callback callback) {
         try{
             new PutRequest(endpoint, requestBody, contentType, headers).sendAsync(callback);
@@ -180,6 +189,7 @@ public class ApiRequestHandler {
      * @param callback Callback for handling the response.
      *  @throws ApiException If there is an exception while making the api call
      */
+    @Step("Send Asynchronous DELETE Request to {0}")
     public void deleteAsync(String endpoint, Map<String, String> headers, Callback callback) {
         try{
             new DeleteRequest(endpoint, headers).sendAsync(callback);
@@ -199,6 +209,7 @@ public class ApiRequestHandler {
      * @param callback    Callback for handling the response.
      * @throws ApiException If there is an exception while making the api call
      */
+    @Step("Send Asynchronous PATCH Request to {0}")
     public void patchAsync(String endpoint, String requestBody, String contentType, Map<String, String> headers, Callback callback) {
         try{
             new PatchRequest(endpoint, requestBody, contentType, headers).sendAsync(callback);

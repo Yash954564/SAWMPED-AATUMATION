@@ -2,6 +2,7 @@ package com.framework.api;
 
 import com.framework.base.BaseTest;
 import com.framework.base.LogManager;
+import io.qameta.allure.Step;
 
 /**
  * This class is responsible for loading API related configurations
@@ -24,6 +25,7 @@ public class ApiConfig {
      *
      * @return The API base URL as a String.
      */
+    @Step("Get API Base URL")
     public static String getApiBaseUrl() {
         String url = baseTest.getProperty(API_BASE_URL); // Get value from properties
         LogManager.info("API Base URL: " + url); // Log the value
@@ -35,6 +37,7 @@ public class ApiConfig {
      *
      * @return The default content type as a String.
      */
+    @Step("Get API Default Content Type")
     public static String getApiDefaultContentType() {
         String contentType = baseTest.getProperty(API_DEFAULT_CONTENT_TYPE); // Get value from properties
         LogManager.info("API Default Content Type: " + contentType); // Log the value
@@ -46,6 +49,7 @@ public class ApiConfig {
      *
      * @return The request timeout as an integer in seconds.
      */
+    @Step("Get API Request Timeout")
     public static int getApiRequestTimeout() {
         String timeout = baseTest.getProperty(API_REQUEST_TIMEOUT); // Get value from properties
         LogManager.info("API Request timeout: " + timeout); // Log the value
@@ -63,6 +67,7 @@ public class ApiConfig {
      *
      * @return The response timeout as an integer in seconds.
      */
+    @Step("Get API Response Timeout")
     public static int getApiResponseTimeout() {
         String timeout = baseTest.getProperty(API_RESPONSE_TIMEOUT); // Get value from properties
         LogManager.info("API Response timeout: " + timeout); // Log the value
@@ -79,6 +84,7 @@ public class ApiConfig {
      *
      * @return The authentication type as a string.
      */
+    @Step("Get API Authentication Type")
     public static String getApiAuthType() {
         String authType = baseTest.getProperty(API_AUTH_TYPE); // Get value from properties
         LogManager.info("API Authentication Type: " + authType); // Log the value

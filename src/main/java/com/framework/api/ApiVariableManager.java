@@ -1,6 +1,7 @@
 package com.framework.api;
 
 import com.framework.base.LogManager;
+import io.qameta.allure.Step;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class ApiVariableManager {
      * @param key   The name of the variable.
      * @param value The value of the variable.
      */
+    @Step("Set API variable. Key: {0}, Value: {1}")
     public static void setVariable(String key, String value) {
         LogManager.info("Setting API variable. Key: " + key + ", Value: " + value); // Log the action
         apiVariables.put(key, value); // Store variable in the map
@@ -33,6 +35,7 @@ public class ApiVariableManager {
      * @return The value of the variable as a String.
      * @throws RuntimeException If the variable is not found.
      */
+    @Step("Get API Variable, Key: {0}")
     public static String getVariable(String key) {
         String value = apiVariables.get(key); // Get the value from the map
         if (value == null) {
@@ -48,6 +51,7 @@ public class ApiVariableManager {
      *
      * @param key The name of the variable to remove.
      */
+    @Step("Remove API Variable, Key: {0}")
     public static void removeVariable(String key) {
         LogManager.info("Removing API variable. Key: " + key); // Log the action
         apiVariables.remove(key); // Remove the variable from map
@@ -56,6 +60,7 @@ public class ApiVariableManager {
     /**
      * Clears all variables from the API variables map.
      */
+    @Step("Clear All API Variables")
     public static void clearVariables() {
         LogManager.info("Clearing all API variables."); // Log the action
         apiVariables.clear(); // Clear all the variables

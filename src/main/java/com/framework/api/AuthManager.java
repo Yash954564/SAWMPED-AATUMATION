@@ -1,6 +1,7 @@
 package com.framework.api;
 
 import com.framework.base.LogManager;
+import io.qameta.allure.Step;
 import okhttp3.Request;
 
 /**
@@ -15,6 +16,7 @@ public class AuthManager {
      * @param requestBuilder The request builder to add the header to.
      * @param token          The Bearer token value.
      */
+    @Step("Set Bearer token in the request header")
     public static void setBearerToken(Request.Builder requestBuilder, String token) {
         LogManager.info("Setting bearer token: " + (token != null ? "*****" : "none"));  // Log the action with masked token
         requestBuilder.header("Authorization", "Bearer " + token); // Add Bearer token header
@@ -28,6 +30,7 @@ public class AuthManager {
      * @param token          The token value for authentication.
      * @throws IllegalArgumentException If the authentication type is not supported.
      */
+    @Step("Apply Authentication, Type: {0}")
     public static void applyAuthentication(Request.Builder requestBuilder, String authType, String token) {
         LogManager.info("Applying authentication: " + authType + " with token: " + (token != null ? "*****" : "none")); // Log auth type and masked token
 

@@ -2,6 +2,7 @@ package com.framework.api;
 
 import com.framework.base.LogManager;
 import com.framework.utils.api.ApiUtils;
+import io.qameta.allure.Step;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -69,6 +70,7 @@ public class PutRequest {
      * @return The Response object from the API call.
      * @throws ApiException If there is an exception while making the API call
      */
+    @Step("Send PUT Request")
     public Response send() {
         String url = ApiConfig.getApiBaseUrl() + (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint); // Construct the URL and remove leading slash
         LogManager.info("Sending PUT request to URL: " + url); // Log the request
@@ -106,6 +108,7 @@ public class PutRequest {
      * @param callback Callback for handling the response.
      * @throws ApiException If there is an exception while making the api call
      */
+    @Step("Send Asynchronous PUT Request")
     public void sendAsync(Callback callback) {
         String url = ApiConfig.getApiBaseUrl() + (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint); // Construct the URL and remove leading slash
         LogManager.info("Sending PUT request asynchronously to URL: " + url); // Log the request

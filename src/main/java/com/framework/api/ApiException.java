@@ -1,5 +1,7 @@
 package com.framework.api;
 
+import io.qameta.allure.Step;
+
 public class ApiException extends RuntimeException {
 
     /**
