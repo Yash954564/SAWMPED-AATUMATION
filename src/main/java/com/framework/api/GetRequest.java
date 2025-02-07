@@ -2,18 +2,15 @@ package com.framework.api;
 
 import com.framework.base.LogManager;
 import io.qameta.allure.Step;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Request;
-import okhttp3.Response;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
-import java.io.IOException;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * This class handles the GET API requests by implementing the send()
- * method which calls OkHttp client for actual execution.
+ * method which calls RestAssured client for actual execution.
  */
 public class GetRequest {
     private String endpoint; // API endpoint
@@ -55,23 +52,21 @@ public class GetRequest {
         LogManager.info("Sending GET request to URL: " + url); // Log the request
 
         // Build request
-        Request.Builder requestBuilder = new Request.Builder()
-                .url(url)
-                .get(); // Set the method to GET
+        RequestSpecification request = RestAssured.given(); // Initialize RestAssured request
 
-        // Add headers and authentication to request builder
-        HeaderManager.addHeaders(requestBuilder, headers); // Add headers to the request
-        AuthManager.applyAuthentication(requestBuilder, ApiConfig.getApiAuthType(), SessionManager.getSessionValue("token"));
-
-        Request request = requestBuilder.build(); // Build the request
+        // Add headers
+        if (headers != null) {
+            request.headers(headers);
+        }
+        AuthManager.applyAuthentication(request, ApiConfig.getApiAuthType(), SessionManager.getSessionValue("token"));
 
         Response response = null; // Initialize response variable
         try {
-            response = apiRequestHandler.client.newCall(request).execute();  // Execute the request using OkHttp client
-            if (Objects.nonNull(response)) {
-                LogManager.info("Response status code: " + response.code()); // Log the status code
+            response = request.get(url); // Execute the request using RestAssured
+            if (response != null) {
+                LogManager.info("Response status code: " + response.getStatusCode()); // Log the status code
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             LogManager.error("Error occurred while sending the GET request: " + e.getMessage());
             throw new ApiException("Error occurred while sending the GET request: " + e.getMessage(), e);
         }
@@ -81,28 +76,32 @@ public class GetRequest {
 
     /**
      * Sends the GET request Asynchronously.
-     *
-     * @param callback Callback for handling the response.
-     * @throws ApiException If there is an exception while making the api call
+     *   @implNote Rest Assured does not have direct async support. Running synchronously for migration simplicity. Consider CompletableFuture for true async.
      */
     @Step("Send Asynchronous GET Request")
-    public void sendAsync(Callback callback) {
-        String url = ApiConfig.getApiBaseUrl() + (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint);; // Construct the URL and remove leading slash
-        LogManager.info("Sending GET request asynchronously to URL: " + url); // Log the request
+    public Response sendAsync() {
+        String url = ApiConfig.getApiBaseUrl() + (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint); // Construct the URL and remove leading slash
+        LogManager.info("Sending GET request to URL: " + url); // Log the request
 
         // Build request
-        Request.Builder requestBuilder = new Request.Builder()
-                .url(url)
-                .get(); // Set the method to GET
+        RequestSpecification request = RestAssured.given(); // Initialize RestAssured request
 
-        // Add headers and authentication to request builder
-        HeaderManager.addHeaders(requestBuilder, headers); // Add headers to the request
-        AuthManager.applyAuthentication(requestBuilder, ApiConfig.getApiAuthType(), SessionManager.getSessionValue("token"));
+        // Add headers
+        if (headers != null) {
+            request.headers(headers);
+        }
+        AuthManager.applyAuthentication(request, ApiConfig.getApiAuthType(), SessionManager.getSessionValue("token"));
 
-        Request request = requestBuilder.build(); // Build the request
-
-        Call call = apiRequestHandler.client.newCall(request); // Create a new call object
-        call.enqueue(callback); // Execute the request using OkHttp client asynchronously
-
+        Response response = null; // Initialize response variable
+        try {
+            response = request.get(url); // Execute the request using RestAssured
+            if (response != null) {
+                LogManager.info("Response status code: " + response.getStatusCode()); // Log the status code
+            }
+        } catch (Exception e) {
+            LogManager.error("Error occurred while sending the GET request: " + e.getMessage());
+            throw new ApiException("Error occurred while sending the GET request: " + e.getMessage(), e);
+        }
+        return response; // Return the response
     }
 }

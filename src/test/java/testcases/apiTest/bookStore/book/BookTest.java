@@ -1,14 +1,18 @@
 package testcases.apiTest.bookStore.book;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.framework.api.ApiRequestHandler;
 import com.framework.api.ApiVariableManager;
 import com.framework.api.SessionManager;
 import com.framework.base.BaseTest;
 import com.framework.utils.api.ApiUtils;
 import com.framework.utils.validation.AssertionUtils;
-import okhttp3.Response;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 import org.testng.annotations.Test;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BookTest extends BaseTest {
@@ -26,12 +30,26 @@ public class BookTest extends BaseTest {
         ApiUtils.validateJsonResponseContains(responseBody, "books", "Validates if the response contains books array.");
         ApiUtils.validateJsonResponseValue(responseBody, "books[0].title", "Git Pocket Guide");
 
+        JsonPath jsonPath = response.jsonPath();  //Use JsonPath for easier data extraction
+        List<String> isbns = jsonPath.getList("books.isbn");  //Get list of all ISBNs
 
-        SessionManager.setSessionValue("isbn", ApiUtils.getJsonNodeFromString(responseBody).get("books").get(5).get("isbn").asText());
-        SessionManager.setSessionValue("isbn1", ApiUtils.getJsonNodeFromString(responseBody).get("books").get(1).get("isbn").asText());
-        SessionManager.setSessionValue("isbn2", ApiUtils.getJsonNodeFromString(responseBody).get("books").get(2).get("isbn").asText());
-        SessionManager.setSessionValue("isbn3", ApiUtils.getJsonNodeFromString(responseBody).get("books").get(3).get("isbn").asText());
-        SessionManager.setSessionValue("isbn4", ApiUtils.getJsonNodeFromString(responseBody).get("books").get(4).get("isbn").asText());
+        //Check if there are enough ISBNs to extract and assign
+        if (isbns.size() > 5) {
+            SessionManager.setSessionValue("isbn", isbns.get(5));
+        }
+        if (isbns.size() > 1) {
+            SessionManager.setSessionValue("isbn1", isbns.get(1));
+        }
+        if (isbns.size() > 2) {
+            SessionManager.setSessionValue("isbn2", isbns.get(2));
+        }
+        if (isbns.size() > 3) {
+            SessionManager.setSessionValue("isbn3", isbns.get(3));
+        }
+        if (isbns.size() > 4) {
+            SessionManager.setSessionValue("isbn4", isbns.get(4));
+        }
+
     }
 
     @Test(description = "Test to get a book by ISBN", dependsOnMethods = "getAllBooksTest")
@@ -40,7 +58,6 @@ public class BookTest extends BaseTest {
         String isbn = SessionManager.getSessionValue("isbn");
         Map<String, String> headers = new HashMap<>();
         headers.put("accept", "application/json");
-
 
         Response response = api.get(String.format("/BookStore/v1/Book?ISBN=%s", isbn), headers);
         String responseBody = ApiUtils.getResponseBody(response);
@@ -66,12 +83,9 @@ public class BookTest extends BaseTest {
         headers.put("Content-Type", "application/json");
         headers.put("Authorization", "Bearer " + ApiVariableManager.getVariable("token"));// Add Authorization header.
 
-
-        Response response = api.post("/BookStore/v1/Books", requestBody, "JSON", headers);
+        Response response = api.post("/BookStore/v1/Books", requestBody, "application/json", headers);
         AssertionUtils.assertEquals(ApiUtils.getStatusCode(response),201, "Validate the status code for add books.");
-
     }
-
 
     @Test(description = "Test get user details", dependsOnMethods = {"addBooksToUserTest"}, enabled = true)
     public void getUserDetailsTest() {
@@ -81,7 +95,6 @@ public class BookTest extends BaseTest {
         Map<String, String> headers = new HashMap<>();
         headers.put("accept", "application/json");
         headers.put("Authorization", "Bearer " + ApiVariableManager.getVariable("token"));// Add Authorization header.
-
 
         Response response = api.get(String.format("/Account/v1/User/%s", userId), headers);
         AssertionUtils.assertEquals(ApiUtils.getStatusCode(response), 200, "Validate the status code for get user details.");

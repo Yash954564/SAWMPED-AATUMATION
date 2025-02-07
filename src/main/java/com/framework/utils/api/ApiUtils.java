@@ -12,12 +12,10 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.framework.api.ApiVariableManager;
 import com.framework.base.LogManager;
 import com.framework.utils.validation.AssertionUtils;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -33,18 +31,18 @@ public class ApiUtils {
      * @throws RuntimeException if the response or response body is null or if an IOException occurs.
      */
     public static String getResponseBody(Response response) {
-        if (response != null && response.body() != null) {
+        if (response != null) {
             try {
-                String body = Objects.requireNonNull(response.body()).string();
+                String body = response.getBody().asString(); // Get the response body as a string using RestAssured
                 LogManager.info("Response Body : " + body); // Log response body
                 return body; // Return response body
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LogManager.error("Error while reading the response body " + e.getMessage());
                 throw new RuntimeException("Error while reading the response body " + e.getMessage(), e);
             }
         } else {
-            LogManager.error("Response or Response body is null"); // Log the error
-            throw new RuntimeException("Response or Response body is null");
+            LogManager.error("Response is null, Unable to get response body"); // Log the error
+            throw new RuntimeException("Response is null, Unable to get response body");
         }
     }
 
@@ -57,7 +55,7 @@ public class ApiUtils {
      */
     public static int getStatusCode(Response response) {
         if (response != null) {
-            int code = response.code(); // Get response status code
+            int code = response.getStatusCode(); // Get response status code using RestAssured
             LogManager.info("Status Code : " + code); // Log status code
             return code; // Return status code
         } else {
@@ -140,17 +138,23 @@ public class ApiUtils {
         }
     }
 
+    /**
+     * Validates a specific value in the JSON response.
+     * @param responseBody The JSON response body as a String.
+     * @param jsonPath   The JSON path to the value to validate.
+     * @param expectedValue The expected value.
+     */
     public static void validateJsonResponseValue(String responseBody, String jsonPath, Object expectedValue) {
-        JsonNode responseNode = getJsonNodeFromString(responseBody);
-        if (responseNode == null) {
+        JsonNode responseNode = getJsonNodeFromString(responseBody); // convert the response body to json object
+        if (responseNode == null) {  // check if the repsonse node is null.
             LogManager.warn("Response body is null, skipping the validation of " + jsonPath);
             return;
         }
         String actualValue = null;
         try {
-            String[] pathParts = jsonPath.split("\\.");
-            JsonNode currentNode = responseNode;
-            for (String part : pathParts) {
+            String[] pathParts = jsonPath.split("\\."); // split the jsonpath by dot(.) operator.
+            JsonNode currentNode = responseNode; // assign the repsonse node as current node.
+            for (String part : pathParts) {  // iterate all parts of json path
                 if (part.contains("[")){ // checking if the part contains array.
                     String[] arrayPart = part.split("\\["); // split by "["
                     String arrayName = arrayPart[0]; // array name before [
@@ -183,105 +187,21 @@ public class ApiUtils {
             throw new RuntimeException("Unable to read the value from the response node " + jsonPath + " " + e.getMessage(), e);
         }
 
-        AssertionUtils.assertEquals(actualValue, String.valueOf(expectedValue), "Validating JSON value at path: " + jsonPath);
+        AssertionUtils.assertEquals(actualValue, String.valueOf(expectedValue), "Validating JSON value at path: " + jsonPath); // assert both values
     }
 
-//    /**
-//     * Validates a specific value in the JSON response.
-//     *
-//     * @param responseBody The response body from an API call.
-//     * @param jsonPath   The JSON path to the value to validate.
-//     * @param expectedValue The expected value.
-//     */
-//    public static void validateJsonResponseValue(String responseBody, String jsonPath, Object expectedValue) {
-//        JsonNode responseNode = getJsonNodeFromString(responseBody); // Get Json node from response.
-//        if (responseNode == null) {
-//            LogManager.warn("Response body is null, skipping the validation of "+jsonPath);
-//            return;
-//        }
-//        String actualValue = null;
-//        try {
-//            String[] pathParts = jsonPath.split("\\."); // split path by . operator
-//            JsonNode currentNode = responseNode;
-//            for(String part : pathParts){
-//                if(currentNode instanceof ObjectNode){
-//                    currentNode = currentNode.get(part);
-//                } else {
-//                    LogManager.error("Invalid json path " + jsonPath);
-//                    throw new RuntimeException("Invalid json path "+jsonPath);
-//                }
-//            }
-//            if (currentNode!=null){
-//                actualValue = currentNode.asText(); // convert the node value as text.
-//            }
-//        } catch (Exception e) {
-//            LogManager.error("Unable to read the value from the response node " + jsonPath + " " + e.getMessage());
-//            throw new RuntimeException("Unable to read the value from the response node " + jsonPath + " " + e.getMessage(), e);
-//        }
-//
-//        AssertionUtils.assertEquals(actualValue, String.valueOf(expectedValue), "Validating JSON value at path: " + jsonPath);
-//    }
-//
-
     /**
-     * Creates a request body based on content type.
+     * Creates a request body based on content type.  Using RestAssured's ContentType for media type.
      *
      * @param requestBody The request body string
      * @param contentType The content type (e.g., JSON, XML, TEXT).
-     * @return RequestBody instance.
+     * @return  RequestBody instance.
      */
-    public static RequestBody createRequestBody(String requestBody, String contentType) {
-        RequestBody body;
-        MediaType mediaType;
-
-        switch (contentType.toUpperCase()) {
-            case "JSON":
-                mediaType = MediaType.parse("application/json; charset=utf-8");
-                break;
-            case "XML":
-                mediaType = MediaType.parse("application/xml; charset=utf-8");
-                break;
-            case "TEXT":
-                mediaType = MediaType.parse("text/plain; charset=utf-8");
-                break;
-            default:
-                mediaType = MediaType.parse(contentType);
-                break;
-        }
-
-        body = RequestBody.create(requestBody, mediaType); // Create request body
+    public static String createRequestBody(String requestBody, String contentType) {
+        String body = requestBody;
+        LogManager.info("The request body is "+ body +" and the content type is "+contentType );
         return body;
     }
-
-//    /**
-//     * Validates if a JSON response contains a specific key
-//     * @param response The response from API.
-//     * @param jsonPath The path of json node.
-//     * @param message The message for the assertion.
-//     */
-//    public static void validateJsonResponseContains(Response response, String jsonPath, String message) {
-//        JsonNode responseNode = getJsonNodeFromResponse(response);
-//        if (responseNode == null) {
-//            LogManager.warn("Response body is null, skipping the validation of " + jsonPath);
-//            return;
-//        }
-//        try {
-//            String[] pathParts = jsonPath.split("\\.");
-//            JsonNode currentNode = responseNode;
-//            for (String part : pathParts) {
-//                if (currentNode instanceof ObjectNode) {
-//                    currentNode = currentNode.get(part);
-//                } else {
-//                    LogManager.error("Invalid json path " + jsonPath);
-//                    throw new RuntimeException("Invalid json path " + jsonPath);
-//                }
-//            }
-//            AssertionUtils.assertNotNull(currentNode, message); // validates if the response node contains the path.
-//        } catch (Exception e) {
-//            LogManager.error("Unable to read the node from the response node " + jsonPath + " " + e.getMessage());
-//            throw new RuntimeException("Unable to read the node from the response node " + jsonPath + " " + e.getMessage(), e);
-//        }
-//    }
 
     /**
      * Validates if a JSON response contains a specific key
@@ -290,16 +210,16 @@ public class ApiUtils {
      * @param message The message for the assertion.
      */
     public static void validateJsonResponseContains(String responseBody, String jsonPath, String message) {
-        JsonNode responseNode = getJsonNodeFromString(responseBody);
-        if (responseNode == null) {
+        JsonNode responseNode = getJsonNodeFromString(responseBody); // convert the response body to json object
+        if (responseNode == null) { // check if the repsonse node is null.
             LogManager.warn("Response body is null, skipping the validation of " + jsonPath);
             return;
         }
         try {
-            String[] pathParts = jsonPath.split("\\.");
-            JsonNode currentNode = responseNode;
-            for (String part : pathParts) {
-                if (currentNode instanceof ObjectNode) {
+            String[] pathParts = jsonPath.split("\\."); // split the jsonpath by dot(.) operator.
+            JsonNode currentNode = responseNode;  // assign the repsonse node as current node.
+            for (String part : pathParts) { // iterate all parts of json path
+                if (currentNode instanceof ObjectNode) { // if the current node is a object node then get the value using the key
                     currentNode = currentNode.get(part);
                 } else {
                     LogManager.error("Invalid json path " + jsonPath);
@@ -321,16 +241,16 @@ public class ApiUtils {
      * @throws RuntimeException If the response is null or there is an error during JSON processing.
      */
     public static JsonNode getJsonNodeFromString(String responseBody) {
-        if (responseBody == null || responseBody.isEmpty()) {
-            LogManager.warn("Response body is empty or null"); // Log the warning
-            return null;
+        if (responseBody == null || responseBody.isEmpty()) { // if response body is empty or null
+            LogManager.warn("Response body is empty or null"); // log a warning message
+            return null; // return null
         }
         ObjectMapper objectMapper = new ObjectMapper(); // Initialize object mapper
         try {
             return objectMapper.readTree(responseBody); // Convert the response body to JsonNode
-        } catch (JsonProcessingException e) {
-            LogManager.error("Error while processing the json response " + e.getMessage());
-            throw new RuntimeException("Error while processing the json response " + e.getMessage(), e);
+        } catch (JsonProcessingException e) { // catch if any exception occurs
+            LogManager.error("Error while processing the json response " + e.getMessage()); // log the error message
+            throw new RuntimeException("Error while processing the json response " + e.getMessage(), e); // throw the runtime exception
         }
     }
 }

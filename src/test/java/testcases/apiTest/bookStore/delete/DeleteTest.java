@@ -6,7 +6,7 @@ import com.framework.api.SessionManager;
 import com.framework.base.BaseTest;
 import com.framework.utils.api.ApiUtils;
 import com.framework.utils.validation.AssertionUtils;
-import okhttp3.Response;
+import io.restassured.response.Response;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -22,13 +22,11 @@ public class DeleteTest extends BaseTest {
         headers.put("accept", "application/json");
         headers.put("Authorization", "Bearer " + ApiVariableManager.getVariable("token"));// Add Authorization header.
 
-
         // make the api call
         Response response =  api.delete(String.format("/BookStore/v1/Books?UserId=%s", userId), headers); // make the delete request.
 
         // validate the response
         AssertionUtils.assertEquals(ApiUtils.getStatusCode(response),204, "Validate the status code for delete all books."); // validate the status code.
-
     }
 
     @Test(description = "Test to delete a user", dependsOnMethods = {"deleteAllBooksTest"}, enabled = true)
@@ -42,7 +40,6 @@ public class DeleteTest extends BaseTest {
 
         // make the api call
         Response response = api.delete(String.format("/Account/v1/User/%s", userId), headers); // make the delete request.
-
 
         // validate the response
         AssertionUtils.assertEquals(ApiUtils.getStatusCode(response), 204, "Validate the status code for delete user."); // validate the status code.

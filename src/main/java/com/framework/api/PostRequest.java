@@ -3,15 +3,15 @@ package com.framework.api;
 import com.framework.base.LogManager;
 import com.framework.utils.api.ApiUtils;
 import io.qameta.allure.Step;
-import okhttp3.*;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
-import java.io.IOException;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * This class handles the POST API requests by implementing the send()
- * method which calls OkHttp client for actual execution.
+ * method which calls RestAssured client for actual execution.
  */
 public class PostRequest {
     private String endpoint; // API endpoint
@@ -73,27 +73,26 @@ public class PostRequest {
     public Response send() {
         String url = ApiConfig.getApiBaseUrl() +  (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint); // Construct the URL and remove leading slash
         LogManager.info("Sending POST request to URL: " + url); // Log the request
-        // Create the request body
-        RequestBody body= ApiUtils.createRequestBody(requestBody,contentType);
-
 
         // Build request
-        Request.Builder requestBuilder = new Request.Builder()
-                .url(url)
-                .post(body); // Set the method to POST
+        RequestSpecification request = RestAssured.given()  // initialize the RestAssured request object
+                .contentType(contentType) // set content type
+                .body(requestBody);  // set request body.
 
         // Add headers
-        HeaderManager.addHeaders(requestBuilder, headers);  // Add headers to the request
+        if (headers != null) {
+            request.headers(headers);  // Add headers to the request
+        }
 
+        AuthManager.applyAuthentication(request, ApiConfig.getApiAuthType(), SessionManager.getSessionValue("token")); // apply authentication if it exist
 
-        Request request = requestBuilder.build(); // Build the request
         Response response=null;  // Initialize response variable
         try{
-            response=  apiRequestHandler.client.newCall(request).execute();  // Execute the request using OkHttp client
-            if (Objects.nonNull(response)){
-                LogManager.info("Response status code: "+response.code()); // Log the status code
+            response=  request.post(url);  // Execute the request using RestAssured
+            if (response != null){
+                LogManager.info("Response status code: "+response.getStatusCode()); // Log the status code
             }
-        }catch (IOException e){
+        }catch (Exception e){
             LogManager.error("Error occurred while sending the POST request: " + e.getMessage());
             throw new ApiException("Error occurred while sending the POST request: " + e.getMessage(), e);
         }
@@ -103,30 +102,35 @@ public class PostRequest {
     /**
      * Sends the POST request Asynchronously.
      *
-     * @param callback Callback for handling the response.
-     * @throws ApiException If there is an exception while making the api call
+     * @implNote Rest Assured does not have direct async support. Running synchronously for migration simplicity. Consider CompletableFuture for true async.
      */
     @Step("Send Asynchronous POST Request")
-    public void sendAsync(Callback callback) {
-        String url = ApiConfig.getApiBaseUrl() + (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint);; // Construct the URL and remove leading slash
+    public Response sendAsync() {
+        String url = ApiConfig.getApiBaseUrl() + (endpoint.startsWith("/") ? endpoint.substring(1) : endpoint); // Construct the URL and remove leading slash
         LogManager.info("Sending POST request asynchronously to URL: " + url); // Log the request
 
-        // Create the request body
-        RequestBody body = ApiUtils.createRequestBody(requestBody,contentType);
-
-
         // Build request
-        Request.Builder requestBuilder = new Request.Builder()
-                .url(url)
-                .post(body); // Set the method to POST
+        RequestSpecification request = RestAssured.given()  // initialize the RestAssured request object
+                .contentType(contentType) // set content type
+                .body(requestBody);  // set request body.
 
-        // Add headers and authentication to request builder
-        HeaderManager.addHeaders(requestBuilder, headers); // Add headers to the request
-        AuthManager.applyAuthentication(requestBuilder, ApiConfig.getApiAuthType(), SessionManager.getSessionValue("token"));
+        // Add headers
+        if (headers != null) {
+            request.headers(headers);  // Add headers to the request
+        }
 
-        Request request = requestBuilder.build(); // Build the request
+        AuthManager.applyAuthentication(request, ApiConfig.getApiAuthType(), SessionManager.getSessionValue("token")); // apply authentication if it exist
 
-        Call call = apiRequestHandler.client.newCall(request); // Create a new call object
-        call.enqueue(callback); // Execute the request using OkHttp client asynchronously
+        Response response=null;  // Initialize response variable
+        try{
+            response=  request.post(url);  // Execute the request using RestAssured
+            if (response != null){
+                LogManager.info("Response status code: "+response.getStatusCode()); // Log the status code
+            }
+        }catch (Exception e){
+            LogManager.error("Error occurred while sending the POST request: " + e.getMessage());
+            throw new ApiException("Error occurred while sending the POST request: " + e.getMessage(), e);
+        }
+        return response;  // Return the response
     }
 }
