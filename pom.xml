@@ -24,11 +24,11 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Enforce Groovy XML version -->
+            <!-- Enforce Groovy version compatibility -->
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-xml</artifactId>
-                <version>3.0.20</version>
+                <version>3.0.9</version> <!-- Updated to a stable version -->
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -69,14 +69,14 @@
             <version>5.6.2</version>
         </dependency>
 
-        <!-- Rest Assured -->
+        <!-- Rest Assured (downgraded to 4.4.0 for stability) -->
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
-            <version>5.3.2</version>
+            <version>4.4.0</version> <!-- Downgraded version -->
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest -->
+        <!-- Hamcrest -->
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
@@ -90,6 +90,7 @@
             <artifactId>json</artifactId>
             <version>${json.version}</version>
         </dependency>
+
         <!-- XML -->
         <dependency>
             <groupId>org.apache.xmlbeans</groupId>
@@ -108,7 +109,6 @@
             <artifactId>poi-ooxml</artifactId>
             <version>${poi.version}</version>
         </dependency>
-
 
         <!-- Appium -->
         <dependency>
@@ -135,20 +135,19 @@
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
-            <version>7.15.0</version> <!-- Use the latest version -->
+            <version>7.15.0</version>
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-testng</artifactId>
-            <version>7.15.0</version> <!-- Use the latest version -->
+            <version>7.15.0</version>
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-picocontainer</artifactId>
-            <version>7.15.0</version> <!-- Use the latest version -->
+            <version>7.15.0</version>
             <scope>test</scope>
         </dependency>
-
 
         <!-- Allure -->
         <dependency>
@@ -202,7 +201,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- DataFaker-->
+        <!-- DataFaker -->
         <dependency>
             <groupId>net.datafaker</groupId>
             <artifactId>datafaker</artifactId>
@@ -228,14 +227,14 @@
             <version>1.8</version>
         </dependency>
 
-        <!-- Explicit dependency on groovy-xml to try and force resolution -->
+        <!-- Explicit dependency on groovy-xml -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-xml</artifactId>
-            <version>3.0.20</version>
+            <version>3.0.9</version> <!-- Updated version -->
         </dependency>
 
-        <!-- Exclude transitive dependency on groovy-xml from a potentially problematic library -->
+        <!-- Exclude conflicting transitive dependencies on groovy-xml from other libraries -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
@@ -247,6 +246,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- OkHttp -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
@@ -292,6 +293,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <!-- Failsafe Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -308,10 +310,7 @@
                     <target>18</target>
                 </configuration>
             </plugin>
-
-
         </plugins>
-
     </build>
 
 </project>

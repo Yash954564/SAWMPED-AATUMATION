@@ -11,9 +11,9 @@ import io.restassured.specification.RequestSpecification;
 public class AuthManager {
 
     /**
-     * Sets the Bearer token in the request header.
+     * Sets the Bearer token in the request specification.
      *
-     * @param request The request builder to add the header to.
+     * @param request The request specification to add the header to.
      * @param token          The Bearer token value.
      */
     @Step("Set Bearer token in the request header")
@@ -25,7 +25,7 @@ public class AuthManager {
     /**
      * Applies the appropriate authentication based on the provided type.
      *
-     * @param request The request builder to add the authentication to.
+     * @param request The request specification to add the authentication to.
      * @param authType       The authentication type (e.g., "bearer", or "none").
      * @param token          The token value for authentication.
      * @throws IllegalArgumentException If the authentication type is not supported.
